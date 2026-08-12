@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  jenkins-controller:
+    build: ./controller
+    container_name: jenkins-controller
+    ports:
+      - "8081:8080"   # Web UI
+      - "50000:50000" # JNLP / Remoting agent port
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./ssh-keys/id_rsa:/run/secrets/id_rsa:ro
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    networks:
+      - jenkins-net
+
+  # Remote agent #1 — simulates a Linux build node
+  agent-linux:
+    image: jenkins/ssh-agent:jdk17
+    container_name: agent-linux
+    environment:
+      - JENKINS_AGENT_SSH_PUBKEY=${SSH_PUBKEY}
+    networks:
+      - jenkins-net
+
+  # Remote agent #2 — simulates an isolated test node
+  agent-test:
+    image: jenkins/ssh-agent:jdk17
+    container_name: agent-test
+    environment:
+      - JENKINS_AGENT_SSH_PUBKEY=${SSH_PUBKEY}
+    networks:
+      - jenkins-net
+
+volumes:
+  jenkins_home:
+
+networks:
+  jenkins-net:
+    driver: bridge

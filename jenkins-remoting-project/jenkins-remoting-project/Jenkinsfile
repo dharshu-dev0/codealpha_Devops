@@ -1,0 +1,43 @@
+// Jenkins Remoting demo pipeline.
+// The controller (agent none) never executes build steps itself — every
+// stage is dispatched to a specific remote, labeled agent node. This
+// demonstrates load distribution across machines and node isolation.
+
+pipeline {
+    agent none
+
+    stages {
+
+        stage('Build - Linux Agent') {
+            agent { label 'linux' }
+            steps {
+                echo "Running BUILD stage remotely on node: ${env.NODE_NAME}"
+                sh 'uname -a'
+                sh 'echo "Compiling project..." && sleep 2'
+            }
+        }
+
+        stage('Test - Isolated Agent') {
+            agent { label 'test' }
+            steps {
+                echo "Running TEST stage remotely on isolated node: ${env.NODE_NAME}"
+                sh 'uname -a'
+                sh 'echo "Running test suite in isolated environment..." && sleep 2'
+            }
+        }
+
+        stage('Report - Back on Linux Agent') {
+            agent { label 'linux' }
+            steps {
+                echo "Aggregating results on node: ${env.NODE_NAME}"
+                sh 'echo "Build + test cycle complete."'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished — build load was distributed across remote, isolated agents.'
+        }
+    }
+}

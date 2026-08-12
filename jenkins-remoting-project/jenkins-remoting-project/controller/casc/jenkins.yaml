@@ -1,0 +1,46 @@
+jenkins:
+  systemMessage: "Jenkins Remoting demo — controller runs 0 executors, all work happens on remote SSH agents."
+  numExecutors: 0
+  mode: EXCLUSIVE
+
+  nodes:
+    - permanent:
+        name: "linux-agent"
+        remoteFS: "/home/jenkins/agent"
+        numExecutors: 2
+        labelString: "linux"
+        mode: NORMAL
+        launcher:
+          ssh:
+            host: "agent-linux"
+            port: 22
+            credentialsId: "agent-ssh-key"
+            sshHostKeyVerificationStrategy:
+              nonVerifyingKeyVerificationStrategy: {}
+
+    - permanent:
+        name: "test-agent"
+        remoteFS: "/home/jenkins/agent"
+        numExecutors: 2
+        labelString: "test"
+        mode: NORMAL
+        launcher:
+          ssh:
+            host: "agent-test"
+            port: 22
+            credentialsId: "agent-ssh-key"
+            sshHostKeyVerificationStrategy:
+              nonVerifyingKeyVerificationStrategy: {}
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - basicSSHUserPrivateKey:
+              scope: GLOBAL
+              id: "agent-ssh-key"
+              username: "jenkins"
+              description: "Controller -> agent SSH key (dedicated, not the controller's own credentials)"
+              privateKeySource:
+                directEntry:
+                  privateKey: "${readFile:/run/secrets/id_rsa}"

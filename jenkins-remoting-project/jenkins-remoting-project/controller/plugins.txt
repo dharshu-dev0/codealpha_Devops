@@ -1,0 +1,8 @@
+configuration-as-code
+ssh-slaves
+ssh-credentials
+credentials
+credentials-binding
+workflow-aggregator
+git
+matrix-auth
