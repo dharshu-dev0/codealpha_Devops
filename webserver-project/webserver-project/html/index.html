@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Dockerized Web Server</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    .badge {
+      background: #22c55e;
+      color: #0f172a;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    h1 { font-size: 2.2rem; margin: 0 0 10px; }
+    p { color: #94a3b8; }
+    code {
+      background: #1e293b;
+      padding: 4px 10px;
+      border-radius: 6px;
+      color: #38bdf8;
+    }
+  </style>
+</head>
+<body>
+  <div class="badge">✅ CONTAINER RUNNING</div>
+  <h1>Hello from my custom Docker web server! 🐳</h1>
+  <p>Served by Nginx inside a Docker container.</p>
+  <p>Image built with <code>docker build -t my-custom-webserver .</code></p>
+</body>
+</html>

@@ -1,0 +1,7 @@
+services:
+  webserver:
+    build: .
+    container_name: custom-site
+    ports:
+      - "8080:80"
+    restart: unless-stopped
